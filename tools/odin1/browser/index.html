@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Odin | 全局箱体地图</title><link rel="stylesheet" href="/app.css"></head>
+<body>
+<header><strong>ODIN <span>全局箱体地图</span></strong><span id="status">连接中</span><nav>
+<select id="mode" aria-label="计算模式"><option value="manual">单帧计算</option><option value="realtime">实时计算</option><option value="epoch">稳定观察一批</option></select>
+<button id="start"><i data-lucide="play"></i>开始</button><button id="pause" title="暂停识别"><i data-lucide="pause"></i></button><button id="stop" title="停止测试进程"><i data-lucide="square"></i></button><button id="once" title="单次计算"><i data-lucide="scan-line"></i></button><button id="save" title="保存当前数据"><i data-lucide="save"></i></button><button id="reset" title="重置箱体地图"><i data-lucide="rotate-ccw"></i></button>
+</nav></header>
+<div id="notice" role="status"></div>
+<div id="epoch-status" role="status"></div>
+<main>
+<section class="map-area">
+<div class="section-head"><h1>全局地图 <small>map / m</small></h1><span id="map-info"></span></div>
+<div class="map-toolbar">
+<div class="segments"><button data-view="3d" aria-pressed="true">3D</button><button data-view="top">俯视</button><button data-view="front">正视</button></div>
+<button id="fit" title="查看相机周围 5 米"><i data-lucide="maximize"></i></button><button id="focus" title="聚焦箱体"><i data-lucide="focus"></i></button>
+<label><input id="saved-cloud" type="checkbox">地图点云</label><label><input id="live-cloud" type="checkbox" checked>实时点云</label><label><input id="show-boxes" type="checkbox" checked>箱体</label><label><input id="history" type="checkbox">历史</label><label><input id="trajectory" type="checkbox">轨迹</label>
+<label><input id="policy-only" type="checkbox">仅策略集合</label>
+<label>点径<input id="point-size" type="range" min="1" max="5" step=".5" value="1.5"></label><label>顶高<input id="ceiling" type="range" min="-2" max="5" step=".05"><output id="ceiling-value"></output></label>
+<span id="cloud-range" title="以相机在地图中的位置为中心，按三维直线距离显示半径 5 米内的点云">相机周围 5 m 内</span>
+</div>
+<div id="scene"></div>
+<div class="legend"><span class="confirmed">已确认</span><span class="tentative">待确认</span><span class="missing">待移除</span><span class="vacated">已移除</span><span class="prediction-color">地图预测</span><span class="camera-color">相机</span><span id="selected-summary">未选中箱体</span></div>
+</section>
+<aside>
+<div class="section-head"><h2>相机</h2><span id="camera-state">等待数据</span></div>
+<figure><figcaption>实时去畸变图像<button id="live-full" title="放大实时图像"><i data-lucide="maximize"></i></button></figcaption><img id="live-image" alt=""><span class="empty" id="live-empty">等待相机图像</span></figure>
+<figure><figcaption>识别与投影 <span id="frame-count"></span><button id="debug-full" title="放大识别图像"><i data-lucide="maximize"></i></button></figcaption><img id="debug-image" alt=""><span class="empty" id="debug-empty">尚未执行计算</span></figure>
+<div id="metrics"></div>
+</aside>
+<div class="map-details">
+<section class="data-area">
+<div class="section-head"><h2>箱体记录 <small id="box-count">0</small></h2><a href="/data/persistent_map.json" download title="下载地图记录"><i data-lucide="download"></i></a></div>
+<div class="table-scroll"><table><thead><tr><th>ID</th><th>状态</th><th>可见性</th><th>姿态</th><th>存在概率</th><th>X / Y / Z (m)</th><th>尺寸 (m)</th><th>观测数</th><th>当前证据</th></tr></thead><tbody id="boxes"></tbody></table></div>
+<div id="detail"></div>
+</section>
+<section class="diagnostics">
+<div class="tabs"><button data-tab="rejected" aria-pressed="true">检测诊断</button><button data-tab="policy">策略地图</button><button data-tab="events">事件</button><button data-tab="relocation">迁移假设</button><button data-tab="settings">参数</button><button data-tab="logs">日志</button></div>
+<div id="policy" class="tab-content" hidden></div>
+<div id="events" class="tab-content" hidden></div><pre id="relocation" class="tab-content" hidden></pre><div id="rejected" class="tab-content"></div>
+<div id="settings" class="tab-content" hidden><form id="config-form"><label>YOLO 最低置信度<input id="confidence" type="number" min=".70" max=".99" step=".01" value=".70"></label><label>YOLO 输入边长<select id="inference-size"><option>640</option><option>960</option><option>1280</option><option>1600</option></select></label><div id="config-fields"></div><button type="submit"><i data-lucide="check"></i>应用参数</button></form></div>
+<pre id="logs" class="tab-content" hidden></pre>
+</section>
+</div>
+</main><script src="/app.js"></script></body></html>

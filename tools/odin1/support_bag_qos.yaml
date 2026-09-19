@@ -1,0 +1,40 @@
+/odin1/imu:
+  reliability: reliable
+  history: keep_last
+  depth: 4000
+  durability: volatile
+/odin1/odometry:
+  reliability: reliable
+  history: keep_last
+  depth: 200
+  durability: volatile
+/odin1/cloud_raw:
+  reliability: reliable
+  history: keep_last
+  depth: 30
+  durability: volatile
+/odin1/cloud_slam:
+  reliability: reliable
+  history: keep_last
+  depth: 30
+  durability: volatile
+/odin1/image/compressed:
+  reliability: reliable
+  history: keep_last
+  depth: 30
+  durability: volatile
+/odin1/diagnostics/depth_registered:
+  reliability: reliable
+  history: keep_last
+  depth: 20
+  durability: volatile
+/tf:
+  reliability: reliable
+  history: keep_last
+  depth: 200
+  durability: volatile
+/tf_static:
+  reliability: reliable
+  history: keep_last
+  depth: 10
+  durability: transient_local

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Odin 实时深度观察</title><link rel="stylesheet" href="/app.css"></head>
+<body>
+<header><div><strong>ODIN</strong><span>实时深度观察</span></div><span id="status">等待相机数据</span></header>
+<main>
+<section class="controls">
+<label>固定量程 <input id="min" type="number" min="0" max="19" value="0.2" step="0.1"> — <input id="max" type="number" min="0.1" max="20" value="3" step="0.1"> m</label>
+<label>置信度 ≥ <input id="confidence" type="number" min="0" max="2000" value="35" step="5"></label>
+<label>采样区域半径 <input id="radius" type="number" min="2" max="60" value="12" step="1"> px</label>
+<label>选点 <select id="probe"><option value="0">A</option><option value="1">B</option><option value="2">C</option></select></label>
+<button id="pause">暂停画面</button><button id="reset">重置曲线 / 基准</button><button id="export">导出 CSV</button>
+</section>
+<p class="hint">点击 RGB 或对齐深度图设置 A / B / C 区域；也可在原始距离图选点。曲线使用区域内真实测距的中位数。移动相机会改变固定区域所观察的位置。</p>
+<div id="error" role="alert"></div>
+<section class="images">
+<article><div class="title"><h2>RGB · 实时去畸变</h2><span id="sync">等待配对</span></div><div class="surface"><canvas id="rgb" width="800" height="648"></canvas></div></article>
+<article><div class="title"><h2>对齐深度 · 相机轴向 Z</h2><button data-full="depth">全屏</button></div><div class="surface"><canvas id="depth" width="800" height="648"></canvas></div><div class="scale"><span id="min-label">0.2 m</span><div></div><span id="max-label">3.0 m</span><span>黑色 = 无有效点</span></div></article>
+</section>
+<section class="bottom">
+<article class="native"><div class="title"><h2>原始点云 · 径向距离 R</h2><button data-full="raw">全屏</button></div><canvas id="raw" width="256" height="192"></canvas><p class="hint">R 是点到雷达原点的距离；Z 是点沿相机光轴的深度，两者数值通常不同。原始网格不做 RGB 投影。</p></article>
+<article class="trend"><div class="title"><h2>固定区域测距 · 最近 120 秒</h2><label><input type="checkbox" id="relative" checked> 相对变化 <select id="chart-range"><option value="150">±150 mm</option><option value="500">±500 mm</option><option value="2000">±2000 mm</option></select></label></div><canvas id="chart" width="1000" height="250"></canvas><div id="readings"></div><p class="hint">曲线纵轴固定，不会逐帧自动缩放；取消勾选后显示绝对距离。暂停或断流期间不会追加重复数据。</p></article>
+</section>
+<footer id="stats">独立读取原始点云 · 2 Hz 显示 · 不运行 YOLO / 箱体地图 · 不插值补洞</footer>
+</main><script src="/app.js"></script></body></html>
